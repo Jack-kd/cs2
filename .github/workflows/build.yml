@@ -1,0 +1,31 @@
+name: Build Touch Test
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Arduino CLI
+        uses: arduino/setup-arduino-cli@v1
+        with:
+          version: latest
+
+      - name: Install ESP32 core
+        run: |
+          arduino-cli core update-index --additional-urls https://dl.espressif.com/dl/package_esp32_index.json
+          arduino-cli core install esp32:esp32@3.3.4 --additional-urls https://dl.espressif.com/dl/package_esp32_index.json
+
+      - name: Compile sketch
+        run: |
+          arduino-cli compile --fqbn esp32:esp32:esp32 touch_test.ino --output-dir ./build
+
+      - name: Upload firmware artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: touch_test_firmware
+          path: ./build/touch_test.ino.bin
