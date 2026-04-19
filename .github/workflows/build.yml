@@ -22,10 +22,10 @@ jobs:
 
       - name: Compile sketch
         run: |
-          arduino-cli compile --fqbn esp32:esp32:esp32 touch_test.ino --output-dir ./build
+          arduino-cli compile --fqbn esp32:esp32:esp32 ./ --output-dir ./build
 
       - name: Upload firmware artifact
         uses: actions/upload-artifact@v4
         with:
           name: touch_test_firmware
-          path: ./build/touch_test.ino.bin
+          path: ./build/cs2.ino.bin
